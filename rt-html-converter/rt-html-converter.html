@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base target="_top">
+		<link rel="stylesheet" href="../base.css">
+		<style>
+			#fields-container				{	margin: auto;	}
+			#fill-button					{	margin: auto;	}
+			footer							{	clear: both; text-align: right;	}
+			#left-menu						{	float: left; width: 200px;}
+			#main							{	background-color: #eeeeee; margin: auto; min-width: 300px; width: 60%;	}
+			#left-menu > ul					{	margin: 0px; padding: 0px; }
+			#left-menu > ul > a > li		{	background-color: #440000; border: 1px solid white; color: white; list-style-type: none; padding: 5px; width: 100%;	}
+			#output-area, #template-area	{	height: 20em; margin-left: 7px; margin-right: 7px; width: calc(100% - 14px);	}
+			#output-container				{	margin: auto;	}
+			#template-container				{	min-width: 300px; width: 100%;	}
+			tr								{	clear: both;	}
+		</style>
+		<script src="https://cdn.tiny.cloud/1/quz6wco9xfjfddmgpwk5bjo5tcjjjsbac8w53say3v31f3jl/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+		<script src="./rt-html-converter.js"></script>
+		<title>RT-to-HTMLinator - Llamanators</title>
+	</head>
+	<body>
+		<div id="top-menu">
+			<h1>Llamanators: RT-to-HTMLinator</h1>
+		</div>
+		<div id="main">
+			<div id="rich-text">
+				<textarea id="rt-input" style="height: 20em;"></textarea>
+			</div>
+			<div id="buttons">
+				<button style="margin: 20px;" onclick="rtToHtml ()">&#x1F53D; RT to HTML &#x1F53D;</button>
+				<button style="margin: 20px;" onclick="htmlToRt ()">&#x1F53C; HTML to RT &#x1F53C;</button>
+			</div>
+			<div id="html">
+				<textarea id="html-output" style="height: 20em; max-width: 100%; min-width: 100%; width: 100%;"></textarea>
+			</div>
+		</div> <!-- main div -->
+		<footer>
+			This page was created by Adam Snell. Last updated March 9, 2022.
+		</footer>
+	</body>
+</html>

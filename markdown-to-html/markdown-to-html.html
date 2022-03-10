@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<style>
+			#html-output {
+				border: 1px solid black;
+				margin: 10px;
+				min-height: 30em;
+			}
+			#input {
+				float: left;
+				min-width: 500px;
+				width: 45%;
+			}
+			#output {
+				float: right;
+				min-width: 500px;
+				width: 45%
+			}
+			textarea {
+				min-height: 30em;
+				width: 100%
+			}
+		</style>
+		<script>
+
+			function convertMarkdownToHtml ()
+			{
+				var input = document.getElementById ("markdown-input").value;
+				var output = input
+					//	unordered lists
+					.replace (/\n[-+*] ([^\n]+)/g, "\n* <li>$1</li>")
+					.replace (/<\/li>\n\* <li>/g, "</li><li>")
+					.replace (/\n\* (<li>[^\n]+)/g, "\n<ul>$1</ul>")
+					//	ordered lists
+					.replace (/\n[0-9]+\. ([^\n]+)/g, "\n# <li>$1</li>")
+					.replace (/<\/li>\n# <li>/g, "</li><li>")
+					.replace (/\n# (<li>[^\n]+)/g, "\n<ol>$1</ol>")
+					//	horizontal rule
+					.replace (/\n(---+|___+|\*\*\*+)\n/g, "<hr/>\n")
+					//	headings
+					.replace (/(^|\n)# (.+)\n/g, "<h1>$2</h1>")
+					.replace (/(^|\n)## (.+)\n/g, "<h2>$2</h2>")
+					.replace (/(^|\n)### (.+)\n/g, "<h3>$2</h3>")
+					.replace (/(^|\n)#### (.+)\n/g, "<h4>$2</h4>")
+					.replace (/(^|\n)##### (.+)\n/g, "<h5>$2</h5>")
+					.replace (/(^|\n)###### (.+)\n/g, "<h6>$2</h6>")
+					//	text formatting
+					.replace (/\*\*([^*]+)\*\*/g, "<b>$1</b>")			//	bold text
+					.replace (/\*([^*]+)\*/g, "<i>$1</i>")				//	italics
+					//	line breaks
+					.replace (/  \n/g, "<br/>")
+					//	paragraph
+					.replace (/\n(.+)\n/g, "<p>$1</p>\n");
+				document.getElementById ("text-output").value = output;
+				updateHtmlOutput ();
+			}
+			function updateHtmlOutput ()
+			{
+				var html = document.getElementById ("text-output").value;
+				console.log (html);
+				document.getElementById ("html-output").innerHTML = html;
+			}
+		</script>
+	</head>
+	<body>
+		<div id="input">
+			<h3>Markdown:</h3>
+			<textarea id="markdown-input">
+#### Guidance
+*Divination cantrip*
+___
+- **Casting Time:** 1 action
+- **Range:** Touch
+- **Components:** V, S
+- **Duration:** Concentration, up to 1 minute
+---
+You touch one willing creature. Once before the spell ends, the target can roll a d4 and add the number rolled to one ability check of its choice. It can roll the die before or after making the ability check. The spell then ends.
+
+#### Spare the Dying
+*Necromancy cantrip*
+___
+- **Casting Time:** 1 action
+- **Range:** Touch
+- **Components:** V, S
+- **Duration:** Instantaneous
+---
+You touch a living creature that has 0 hit points. The creature becomes stable. This spell has no effect on undead or constructs.
+			</textarea>
+			<button id="convert-button" onclick="convertMarkdownToHtml()">Convert</button>
+			<textarea id="text-output" oninput="updateHtmlOutput()"></textarea>
+		</div>
+		<div id="output">
+			<h3>HTML:</h3>
+			<div id="html-output"></div>
+		</div>
+	</body>
+</html>
