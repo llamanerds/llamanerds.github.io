@@ -3,12 +3,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <style>
-            @media (max-width: 285px) {
+            @media (max-width: 400px) {
                 #daily-info {
                     grid-template-columns: 100%;
                 }
             }
-            @media (min-width: 286px) {
+            @media (min-width: 401px) {
                 #daily-info {
                     grid-template-columns: 1fr 1fr;
                 }
@@ -23,9 +23,10 @@
             #daily-info {
                 display: grid;
                 column-gap: 10px;
+                max-width: 500px;
                 padding: 5px;
                 row-gap: 10px;
-                width: 285px;
+                width: 100%;
             }
             #daily-info > div {
                 border: 1px solid black;
@@ -44,8 +45,10 @@
                 border: 1px solid grey;
                 column-count: 3;
                 column-gap: 5px;
-                grid-template-columns: 100px 75px 100px;
+                grid-template-columns: 1fr .75fr 1fr;
                 display: grid;
+                max-width: 500px;
+                width: 100%;
             }
             #hourly-info > div {
                 text-align: center;
