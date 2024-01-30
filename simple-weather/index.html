@@ -1,18 +1,31 @@
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
         <style>
+            @media (max-width: 285px) {
+                #daily-info {
+                    grid-template-columns: 100%;
+                }
+            }
+            @media (min-width: 286px) {
+                #daily-info {
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+
             body {
                 align-items: center;
                 display: flex;
                 flex-flow: column;
+                min-width: 285px;
             }
             #daily-info {
                 display: grid;
-                column-count: 2;
                 column-gap: 10px;
-                grid-template-columns: repeat(2, 200px);
                 padding: 5px;
                 row-gap: 10px;
+                width: 285px;
             }
             #daily-info > div {
                 border: 1px solid black;
@@ -31,7 +44,7 @@
                 border: 1px solid grey;
                 column-count: 3;
                 column-gap: 5px;
-                grid-template-columns: 10em 5em 5em;
+                grid-template-columns: 100px 75px 100px;
                 display: grid;
             }
             #hourly-info > div {
@@ -40,6 +53,7 @@
             .odd {
                 background-color: #dddddd;
             }
+        
         </style>
         <script>
             class forecast
@@ -184,7 +198,6 @@
         </script>
     </head>
     <body>
-        <h2> La Mirada, CA</h2>
         <h2>Daily weather</h2>
         <div id="daily-info"></div>
         <h2>Hourly weather</h2>
