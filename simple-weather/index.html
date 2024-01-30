@@ -13,9 +13,13 @@
                     grid-template-columns: 1fr 1fr;
                 }
             }
-
+            
+            * {
+                box-sizing: border-box;
+            }
             body {
                 align-items: center;
+                background-color: #2677c3;
                 display: flex;
                 flex-flow: column;
                 min-width: 285px;
@@ -24,33 +28,49 @@
                 display: grid;
                 column-gap: 10px;
                 max-width: 500px;
-                padding: 5px;
                 row-gap: 10px;
                 width: 100%;
             }
             #daily-info > div {
-                border: 1px solid black;
                 text-align: center;
+            }
+            .day-info, #hourly-info {
+                background-color: white;
+                border: 1px solid black;
+                border-radius: 5px;
             }
             .day-info > * {
                 height: 1.5em;
                 margin: 0px;
                 padding: 0px;
             }
-            h1 {
+            #days, #header, #hours {
+                max-width: 500px;
+                min-width: 285px;
+                width: 100%;
+            }
+            
+            h1, h2 {
                 margin-bottom: 0px;
+            }
+            h2 {
+                background-color: white;
+                border: 1px solid black;
+                border-radius: 5px;
+                padding: 10px;
             }
             .h3 {
                 font-size: 1.2em;
                 font-weight: bold;
             }
             #hourly-info {
-                border: 1px solid grey;
+                border: 1px solid black;
                 column-count: 3;
                 column-gap: 5px;
                 grid-template-columns: 1fr .75fr 1fr;
                 display: grid;
                 max-width: 500px;
+                padding: 5px 0;
                 width: 100%;
             }
             #hourly-info > *, .wind {
@@ -237,10 +257,17 @@
         </script>
     </head>
     <body>
-        <h1>SimpleWeather</h1>for La Mirada, CA
-        <h2>Daily weather</h2>
-        <div id="daily-info"></div>
-        <h2>Hourly weather</h2>
-        <div id="hourly-info"><h2>Hourly Forecast</h2></div>
+        <div id="header">
+            <h1>SimpleWeather</h1>
+            <div>for La Mirada, CA</div>
+        </div>
+        <div id="days">
+            <h2>Daily weather</h2>
+            <div id="daily-info"></div>
+        </div>
+        <div id="hours">
+            <h2>Hourly weather</h2>
+            <div id="hourly-info"></div>
+        </div>
     </body>
 </html>
