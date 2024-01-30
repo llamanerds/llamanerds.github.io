@@ -1,0 +1,192 @@
+<html>
+    <head>
+        <style>
+            body {
+                align-items: center;
+                display: flex;
+                flex-flow: column;
+            }
+            #daily-info {
+                display: grid;
+                column-count: 2;
+                column-gap: 10px;
+                grid-template-columns: repeat(2, 200px);
+                padding: 5px;
+                row-gap: 10px;
+            }
+            #daily-info > div {
+                border: 1px solid black;
+                text-align: center;
+            }
+            #daily-info *
+            {
+                margin: 0px;
+                padding: 0px;
+            }
+            .h3 {
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+            #hourly-info {
+                border: 1px solid grey;
+                column-count: 3;
+                column-gap: 5px;
+                grid-template-columns: 10em 5em 5em;
+                display: grid;
+            }
+            #hourly-info > div {
+                text-align: center;
+            }
+            .odd {
+                background-color: #dddddd;
+            }
+        </style>
+        <script>
+            class forecast
+            {
+                baseUrl; cwa; gridX; gridY; latitude; longitude;
+                constructor (lat = 33.90597058201411, long = -118.01659580883346)
+                {
+                    this.latitude = lat;
+                    this.longitude = long;
+                    this.baseUrl = "https://api.weather.gov";
+
+                    this.requestGridInfo ();
+                }
+
+                /** API Get code
+                    let apiUrl = `${this.baseUrl}/_the_rest_of_the_api_url`;
+                    fetch(apiUrl)
+                    .then(response =>
+                    {
+                        if (!response.ok)
+                        {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data =>
+                    {
+                        call_some_handler_function (data);
+                    })
+                    .catch (error => {
+                        console.error('Error:', error);
+                    });
+                */
+
+                catchDailyForecast (data)
+                {
+                    for (let i = 0; i < 4; i++)
+                    {
+                        let fcData = data.properties.periods[i];
+                        let divHtml = `<div class="day-info">
+    <h3>${fcData.name}</h3>
+    <div>${fcData.temperature} ${fcData.temperatureUnit}</div>
+    <div>${fcData.windSpeed} ${fcData.windDirection}</div>
+</div>`;
+                        document.getElementById ("daily-info").innerHTML += divHtml;
+                    }
+                }
+
+                catchHourlyForecast (data)
+                {
+                    let container = document.getElementById("hourly-info")
+                    container.innerHTML = `<div class="h3">Time</div><div class="h3">Temp</div><div class="h3">Wind</div>`;
+                    
+                    for (let i = 0; i < 10; i++)
+                    {
+                        let fcData = data.properties.periods[i];
+
+                        let time = `<div class="${i%2==0 ? 'even' : 'odd'}">${fcData.startTime.match(/T([0-9\:]{5})/)[1]} - ${fcData.endTime.match(/T([0-9\:]{5})/)[1]}</div>`;
+                        let temp = `<div class="${i%2==0 ? 'even' : 'odd'}">${fcData.temperature}</div>`;
+                        let wind = `<div class="${i%2==0 ? 'even' : 'odd'}">${fcData.windSpeed} ${fcData.windDirection}</div>`;
+
+                        container.innerHTML += time + temp + wind;                        
+                    }
+                }
+
+                catchGridInfo (data)
+                {
+                    this.cwa = data.properties.cwa;
+                    this.gridX = data.properties.gridX;
+                    this.gridY = data.properties.gridY;
+                    console.log (`Grid info set:\n\tcwa: ${this.cwa}gridX: ${this.gridX}\t\n\n\tgridY: ${this.gridY}`);
+                    this.requestDailyForecast ();
+                    this.requestHourlyForecast ();
+                }
+
+                requestDailyForecast ()
+                {
+                    let apiUrl = `${this.baseUrl}/gridpoints/${this.cwa}/${this.gridX},${this.gridY}/forecast`;
+                    fetch(apiUrl)
+                    .then(response =>
+                    {
+                        if (!response.ok)
+                        {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data =>
+                    {
+                        this.catchDailyForecast (data);
+                    })
+                    .catch (error => {
+                        console.error('Error:', error);
+                    });
+                   
+                }
+
+                requestHourlyForecast ()
+                {
+                    let apiUrl = `${this.baseUrl}/gridpoints/${this.cwa}/${this.gridX},${this.gridY}/forecast/hourly`;
+                    fetch(apiUrl)
+                    .then(response =>
+                    {
+                        if (!response.ok)
+                        {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data =>
+                    {
+                        this.catchHourlyForecast (data);
+                    })
+                    .catch (error => {
+                        console.error('Error:', error);
+                    });
+                   
+                }
+
+                requestGridInfo ()
+                {
+                    let apiUrl = `${this.baseUrl}/points/${this.latitude},${this.longitude}`;
+
+                    fetch(apiUrl).then(response =>
+                    {
+                        if (!response.ok)
+                        {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data =>
+                    {
+                        this.catchGridInfo (data);
+                    })
+                    .catch (error => {
+                        console.error('Error:', error);
+                    });
+                }
+            }
+            var biola = new forecast ();
+        </script>
+    </head>
+    <body>
+        <h2>Daily weather</h2>
+        <div id="daily-info"></div>
+        <h2>Hourly weather</h2>
+        <div id="hourly-info"><h2>Hourly Forecast</h2></div>
+    </body>
+</html>
