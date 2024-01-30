@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+        <script src="https://kit.fontawesome.com/ed584df519.js" crossorigin="anonymous"></script>
         <style>
             @media (max-width: 400px) {
                 #daily-info {
@@ -32,8 +32,8 @@
                 border: 1px solid black;
                 text-align: center;
             }
-            #daily-info *
-            {
+            .day-info > * {
+                height: 1.5em;
                 margin: 0px;
                 padding: 0px;
             }
@@ -53,11 +53,20 @@
                 max-width: 500px;
                 width: 100%;
             }
-            #hourly-info > div {
-                text-align: center;
+            #hourly-info > *, .wind {
+                align-items: center;
+                justify-content: center;
+                display: flex;
+                flex-flow: row nowrap;
+                height: 1.5em;
             }
             .odd {
                 background-color: #dddddd;
+            }
+
+            .wind > div {
+                padding-left: 5px;
+                padding-right: 5px;
             }
         
         </style>
@@ -99,10 +108,15 @@
                     for (let i = 0; i < 4; i++)
                     {
                         let fcData = data.properties.periods[i];
-                        let divHtml = `<div class="day-info">
-    <h3>${fcData.name}</h3>
+                        let divHtml =
+`<div class="day-info">
+    <h3> ${fcData.name}</h3>
     <div>${fcData.temperature} ${fcData.temperatureUnit}</div>
-    <div>${fcData.windSpeed} ${fcData.windDirection}</div>
+    <div class="wind">
+        <div>${fcData.windSpeed}</div>
+        <div>${this.drawArrow(fcData.windDirection)}</div>
+        <div>(${fcData.windDirection})</div>
+    </div>
 </div>`;
                         document.getElementById ("daily-info").innerHTML += divHtml;
                     }
@@ -111,7 +125,7 @@
                 catchHourlyForecast (data)
                 {
                     let container = document.getElementById("hourly-info")
-                    container.innerHTML = `<div class="h3">Time</div><div class="h3">Temp</div><div class="h3">Wind</div>`;
+                    container.innerHTML = `<div class="h3"><i class="fa-regular fa-clock"></i></div><div class="h3"><i class="fa-solid fa-temperature-high"></i></div><div class="h3"><i class="fa-solid fa-wind"></i></div>`;
                     
                     for (let i = 0; i < 10; i++)
                     {
@@ -119,7 +133,7 @@
 
                         let time = `<div class="${i%2==0 ? 'even' : 'odd'}">${fcData.startTime.match(/T([0-9\:]{5})/)[1]} - ${fcData.endTime.match(/T([0-9\:]{5})/)[1]}</div>`;
                         let temp = `<div class="${i%2==0 ? 'even' : 'odd'}">${fcData.temperature}</div>`;
-                        let wind = `<div class="${i%2==0 ? 'even' : 'odd'}">${fcData.windSpeed} ${fcData.windDirection}</div>`;
+                        let wind = `<div class="${i%2==0 ? 'even' : 'odd'} wind"><div>${fcData.windSpeed}</div><div>${this.drawArrow(fcData.windDirection)}</div><div>(${fcData.windDirection})</div></div>`;
 
                         container.innerHTML += time + temp + wind;                        
                     }
@@ -133,6 +147,25 @@
                     console.log (`Grid info set:\n\tcwa: ${this.cwa}gridX: ${this.gridX}\t\n\n\tgridY: ${this.gridY}`);
                     this.requestDailyForecast ();
                     this.requestHourlyForecast ();
+                }
+
+                drawArrow (arrowDirection)
+                {
+                    var angles = ["S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE"];
+                    let arrowAngle = angles.indexOf (arrowDirection) * 22.5;
+                    let arrow = 
+`<svg viewbox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" style="height: 100%; width: auto;">
+    <circle
+        cx="30" cy="30" r="29"
+        style="fill-opacity: 0; stroke: rgb(0,0,0); stroke-width: 1px;"
+    />
+    <polyline
+        points="30,5 20,55 40,55 30,5"
+        style="stroke: rgb(0,0,0); stroke-width: 1px;"
+        transform="rotate(${arrowAngle} 30 30)"
+    />
+</svg>`;
+                    return arrow;
                 }
 
                 requestDailyForecast ()
